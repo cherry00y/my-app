@@ -27,27 +27,35 @@ const CreateInfor = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('detail', detail);
+
     if (picture) {
-      formData.append('picture', picture);
+        formData.append('picture', picture);
     } else {
-      console.log("Please upload your picture");
+        console.log("Please upload your picture");
+        return; // ป้องกันการส่งข้อมูลถ้าภาพไม่ถูกอัพโหลด
     }
+
     formData.append('type', type);
 
     try {
-      const response = await axiosInstance.post('/information/information', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
+        const response = await axiosInstance.post('/information', formData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        alert('Information added successfully');
+        console.log(response.data);
     } catch (error) {
-      console.error(error);
+        console.error('Error:', error);
+        alert('An error occurred while adding information');
     }
-  };
+};
 
   return (
     <div className="hero bg-base-100 min-h-screen min-w-px">
