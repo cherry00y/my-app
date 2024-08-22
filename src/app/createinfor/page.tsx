@@ -1,12 +1,74 @@
 'use client';
-import React from 'react';
+import React, {useState} from 'react';
+import useAxios from '../useaxios';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import FroalaEditor from 'react-froala-wysiwyg';
 import Image from "next/image"
 
 const CreateInfor = () => {
-  
+  const [formData, setFormData] = useState({
+    title: '',
+    detail: '',
+    pic: null,
+    type: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData,
+        [name]: value
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+        ...formData,
+        pic: e.target.files[0]
+    });
+  };
+
+  const handleEditorChange = (content) => {
+    setFormData({
+      ...formData,
+      detail: content
+    });
+  };
+
+
+// Example API call
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('detail', formData.detail);
+    data.append('picture', formData.picture);
+    data.append('type', formData.type);
+
+    try {
+        const response = await fetch('http://localhost:3003/information', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: data
+        });
+
+        if (response.ok) {
+            alert('Information added successfully');
+        } else {
+            const errorData = await response.json(); // Parse error response if available
+            alert(`Failed to add information: ${errorData.message || 'Unknown error'}`); // Display specific error message
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while adding information');
+    }
+  };
 
   return (
     <div className="hero bg-base-100 min-h-screen min-w-px">
@@ -18,42 +80,59 @@ const CreateInfor = () => {
               <label className="block mb-2 text-m font-medium text-gray-900 dark:text-white">Title</label>
               <input
                 type="text"
-                id="title"
+                id="title-information"
+                name="title"
+                value={formData.title}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-50 focus:border-gray-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                onChange={handleChange}
                 placeholder="Enter your title."
                 required
               />
             </div>
             <label className="block mb-2 text-m font-medium text-gray-900 dark:text-white">Detail</label>
             <div>
-              <FroalaEditor
-                config={{
-                  placeholderText: "Start writing your information"
-                }}
-                tag='textarea'
-              />
+                <FroalaEditor
+                  config={{
+                    placeholderText: "Start writing your information"
+                  }}
+                  tag='textarea'
+                  model={formData.detail}
+                  onModelChange={handleEditorChange}
+                />
+              </div>
+            
+            <div>
+               <label className="block mb-2 mt-2 text-m font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload file</label>
+              <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="picture" type="file" name='picture' onChange={handleFileChange}></input>
             </div>
 
-            <p className="block mb-2 text-m font-medium mt-4 text-gray-900 dark:text-white">Type</p>
-            <div className="flex items-center mb-4 mt-4">
-              <input
-                type="radio"
-                id="default-radio-1"
-                name="radio-1"
-                className="radio"
-                defaultChecked
-              />
-              <label htmlFor="default-radio-1" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default radio</label>
+            <div className='type-box'>
+              <p className="block mb-2 text-m font-medium mt-4 text-gray-900 dark:text-white">Type</p>
+              <div className="flex items-center mb-4 mt-4">
+                <input
+                  type="radio"
+                  id="promotion"
+                  name="type"
+                  value="promotion and information"
+                  checked = {formData.type === 'promotion and information'}
+                  onChange={handleChange}
+                  defaultChecked
+                />
+                <label htmlFor="promotion" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">promotion and information</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="knowledge"
+                  name="type"
+                  value="knowledge"
+                  checked = {formData.type === 'knowledge'}
+                  onChange={handleChange}
+                />
+                <label htmlFor="knowledge" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">knowledge</label>
+              </div>
             </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="default-radio-2"
-                name="radio-1"
-                className="radio"
-              />
-              <label htmlFor="default-radio-2" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
-            </div>
+            
             <div className="flex justify-center mt-4">
               <button type="button" className="px-10 py-2 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
             </div>

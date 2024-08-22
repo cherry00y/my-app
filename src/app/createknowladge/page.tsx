@@ -32,25 +32,30 @@ const CreateKnowledge = () => {
                 />
               </div>
 
+              <div>
+                <label className="block mb-2 mt-2 text-m font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload file</label>
+                <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="picture" type="file" name='picture' ></input>
+              </div>
+
               <p className="block mb-2 text-m font-medium mt-4 text-gray-900 dark:text-white">Type</p>
               <div className="flex items-center mb-4 mt-4">
                 <input
                   type="radio"
-                  id="default-radio-1"
-                  name="radio-1"
-                  className="radio"
+                  id="promotion"
+                  name="type"
+                  value="promotion and information"
                   defaultChecked
                 />
-                <label htmlFor="default-radio-1" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default radio</label>
+                <label htmlFor="promotion" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default radio</label>
               </div>
               <div className="flex items-center">
                 <input
                   type="radio"
-                  id="default-radio-2"
-                  name="radio-1"
-                  className="radio"
+                  id="knowledge"
+                  name="type"
+                  value="knowledge"
                 />
-                <label htmlFor="default-radio-2" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
+                <label htmlFor="knowledge" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
               </div>
               <div className="flex justify-center mt-4">
                 <button type="button" className="px-10 py-2 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
