@@ -40,15 +40,14 @@ const CreateInfor = () => {
     try {
       const response = await axiosInstance.post('/information/information', formData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-        body: formData
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
+        },
       });
-      if (response.ok) {
+      if (response.status === 200) {
         alert('Information added successfully');
     } else {
-        const errorData = await response.json(); // Parse error response if available
-        alert(`Failed to add information: ${errorData.message || 'Unknown error'}`); // Display specific error message
+        alert(`Failed to add information: ${response.statusText || 'Unknown error'}`);
     }
       console.log(response.data);
     } catch (error) {
