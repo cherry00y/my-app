@@ -38,7 +38,7 @@ const CreateInfor = () => {
     formData.append('type', type);
 
     try {
-      const response = await axiosInstance.post('/information', formData, {
+      const response = await axiosInstance.post('/information/information', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
