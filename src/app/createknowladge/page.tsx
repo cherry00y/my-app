@@ -44,7 +44,6 @@ const CreateKnowledge = () => {
                   id="promotion"
                   name="type"
                   value="promotion and information"
-                  defaultChecked
                 />
                 <label htmlFor="promotion" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default radio</label>
               </div>
@@ -53,7 +52,7 @@ const CreateKnowledge = () => {
                   type="radio"
                   id="knowledge"
                   name="type"
-                  value="knowledge"
+                  value="knowledgeg"
                 />
                 <label htmlFor="knowledge" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
               </div>
