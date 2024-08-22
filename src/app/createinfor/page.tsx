@@ -1,6 +1,9 @@
 'use client';
 import React, {useState} from 'react';
 import useAxios from '../useaxios';
+import 'froala-editor/js/plugins/paragraph_format.min.js';
+import 'froala-editor/js/plugins/lists.min.js';
+
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import FroalaEditor from 'react-froala-wysiwyg';
