@@ -1,12 +1,19 @@
-import axios from "axios";
+// useAxios.ts
+import axios, { AxiosInstance } from "axios";
 
-const authToken = localStorage.getItem('token');
+const useAxios = (): AxiosInstance => {
+  if (typeof window !== "undefined") {
+    const authToken = localStorage.getItem('token');
 
-const useAxios = axios.create({
-    baseURL: "http://localhost:8000", 
-    headers: {
-        'authorization': `Bearer ${authToken}`
-    }
-});
+    return axios.create({
+      baseURL: "http://localhost:8000",
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    });
+  }
+
+  return axios.create(); // Fallback for server-side rendering
+};
 
 export default useAxios;

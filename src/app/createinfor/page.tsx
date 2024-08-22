@@ -1,13 +1,12 @@
 'use client';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import useAxios from '../useaxios';
 import 'froala-editor/js/plugins/paragraph_format.min.js';
 import 'froala-editor/js/plugins/lists.min.js';
-
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import Image from "next/image"
+import Image from "next/image";
 
 const CreateInfor = () => {
   const [formData, setFormData] = useState<{
@@ -22,19 +21,21 @@ const CreateInfor = () => {
     type: ''
   });
 
+  const axiosInstance = useAxios(); // Correctly initialize Axios instance here
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
-        ...formData,
-        [name]: value
+      ...formData,
+      [name]: value
     });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData({
-          ...formData,
-          picture: e.target.files[0]
+        ...formData,
+        picture: e.target.files[0]
       });
     }
   };
@@ -60,21 +61,21 @@ const CreateInfor = () => {
     data.append('type', formData.type);
 
     try {
-        const response = await useAxios.post('/information', data, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'multipart/form-data' // Ensure the correct Content-Type is set
-            }
-        });
-
-        if (response.status === 200) {
-            alert('Information added successfully');
-        } else {
-            alert(`Failed to add information: ${response.statusText || 'Unknown error'}`);
+      const response = await axiosInstance.post('/information', data, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
         }
+      });
+
+      if (response.status === 200) {
+        alert('Information added successfully');
+      } else {
+        alert(`Failed to add information: ${response.statusText || 'Unknown error'}`);
+      }
     } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while adding information');
+      console.error('Error:', error);
+      alert('An error occurred while adding information');
     }
   };
 
