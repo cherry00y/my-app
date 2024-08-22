@@ -27,35 +27,35 @@ const CreateInfor = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const formData = new FormData();
     formData.append('title', title);
     formData.append('detail', detail);
-
     if (picture) {
-        formData.append('picture', picture);
+      formData.append('picture', picture);
     } else {
-        console.log("Please upload your picture");
-        return; // ป้องกันการส่งข้อมูลถ้าภาพไม่ถูกอัพโหลด
+      console.log("Please upload your picture");
     }
-
     formData.append('type', type);
 
     try {
-        const response = await axiosInstance.post('/information/information', formData, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-
+      const response = await axiosInstance.post('/information/information', formData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+        body: formData
+      });
+      if (response.ok) {
         alert('Information added successfully');
-        console.log(response.data);
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while adding information');
+    } else {
+        const errorData = await response.json(); // Parse error response if available
+        alert(`Failed to add information: ${errorData.message || 'Unknown error'}`); // Display specific error message
     }
-};
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+            alert('An error occurred while adding information');
+    }
+  };
 
   return (
     <div className="hero bg-base-100 min-h-screen min-w-px">
