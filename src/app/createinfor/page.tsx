@@ -7,14 +7,19 @@ import FroalaEditor from 'react-froala-wysiwyg';
 import Image from "next/image"
 
 const CreateInfor = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    detail: string;
+    picture: File | null;
+    type: string;
+  }>({
     title: '',
     detail: '',
-    pic: null,
+    picture: null,
     type: ''
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
         ...formData,
@@ -22,47 +27,47 @@ const CreateInfor = () => {
     });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-        ...formData,
-        pic: e.target.files[0]
-    });
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData({
+          ...formData,
+          picture: e.target.files[0]
+      });
+    }
   };
 
-  const handleEditorChange = (content) => {
+  const handleEditorChange = (content: string) => {
     setFormData({
       ...formData,
       detail: content
     });
   };
 
-
-// Example API call
-
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const data = new FormData();
     data.append('title', formData.title);
     data.append('detail', formData.detail);
-    data.append('picture', formData.picture);
+
+    if (formData.picture) {
+      data.append('picture', formData.picture);
+    }
+
     data.append('type', formData.type);
 
     try {
-        const response = await fetch('http://localhost:3003/information', {
-            method: 'POST',
+        const response = await useAxios.post('/information', data, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: data
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data' // Ensure the correct Content-Type is set
+            }
         });
 
-        if (response.ok) {
+        if (response.status === 200) {
             alert('Information added successfully');
         } else {
-            const errorData = await response.json(); // Parse error response if available
-            alert(`Failed to add information: ${errorData.message || 'Unknown error'}`); // Display specific error message
+            alert(`Failed to add information: ${response.statusText || 'Unknown error'}`);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -75,7 +80,7 @@ const CreateInfor = () => {
     <div className="hero-content w-full flex-col lg:flex-row-reverse">
       <div className="card w-full max-w-lg lg:max-w-2xl shrink-0 shadow-2xl bg-amber-100">
         <div className="mx-4 lg:mx-8 my-8 justify-center border border-black rounded-lg p-4">
-          <form className="max-w-2xl mx-auto">
+          <form className="max-w-2xl mx-auto" onSubmit={handleSubmit}>
             <div className="mb-5">
               <label className="block mb-2 text-m font-medium text-gray-900 dark:text-white">Title</label>
               <input
